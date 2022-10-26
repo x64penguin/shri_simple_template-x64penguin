@@ -5,13 +5,17 @@ const webpack = require('webpack');
 
 const config = {
     entry: {
-        about: './src/pages/About.js',
-        home: './src/pages/Home.js',
+        index: "./src/index.js",
+        about: "./src/pages/About.js",
+        home: "./src/pages/Home.js",
     },
     plugins: [
-        new HtmlWebpackPlugin(),
+        new HtmlWebpackPlugin({
+            template: "./public/index.html",
+        }),
         new StatoscopePlugin({
-            saveStatsTo: 'stats.json',
+            saveStatsTo: "stats.json",
+            saveReportTo: "report.html",
             saveOnlyStats: false,
             open: false,
         }),
@@ -33,7 +37,7 @@ const config = {
                 exclude: [/node_modules/],
                 loader: 'babel-loader',
                 options: {
-                    presets: ["@babel/env", "@babel/preset-react"],
+                    presets: ["@babel/env", ["@babel/preset-react", {"runtime": "automatic"}]],
                 }
             },
             {
