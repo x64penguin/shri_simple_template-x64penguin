@@ -1,18 +1,35 @@
 name: NodeJS with Webpack
 
 on:
+  push:
+  
   pull_request:
     branches: [ "master" ]
 
 jobs:
-  build:
+  linter:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
           node-version: '14'
-      - run: npm run build
+      - run: npm install
       - run: npm run lint:js
       - run: npm run lint:css
-    
+      - run: npm run build
+      - run: echo "линтеры воркают"
+  
+  push:
+    runs-on: ubuntu-latest
+    if: github.event_name == "pull_request"
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '14'
+      - run: npm install
+      - run: npm run build
+      - run: npm run deploy
+      - run: echo "деплой воркает"
+      
