@@ -18,6 +18,7 @@ jobs:
       - run: npm run lint:js
       - run: npm run lint:css
       - run: npm run build
+      
       - run: echo "линтеры воркают"
   
   push:
@@ -31,5 +32,6 @@ jobs:
       - run: npm install
       - run: npm run build
       - run: npm run deploy
+      
       - run: echo "деплой воркает"
       
