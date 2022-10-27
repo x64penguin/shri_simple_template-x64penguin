@@ -23,6 +23,8 @@ jobs:
   
   push:
     runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     if: github.event.pull_request
     steps:
       - uses: actions/checkout@v3
@@ -31,8 +33,6 @@ jobs:
           node-version: '14'
       - run: npm install
       - run: npm run build
-      - run: git config --global user.email "anton.lobkov.mtb@gmail.com"
-      - run: git config --global user.name "x64penguin"
       - run: npm run deploy
       
       - run: echo "деплой воркает"
