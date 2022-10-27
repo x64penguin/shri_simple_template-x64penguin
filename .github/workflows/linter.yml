@@ -10,7 +10,10 @@ jobs:
   linter:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '14'
       - run: npm install
       - run: npm run lint:js
       - run: npm run lint:css
@@ -20,9 +23,14 @@ jobs:
   
   push:
     runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     if: github.event.pull_request
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '14'
       - run: npm install
       - run: npm run build
       - run: npm run deploy
