@@ -2,12 +2,12 @@ name: NodeJS worflow
 
 on:
   pull_request:
-
+    branches: [master]
   push:
     branches: [master]
 
 jobs:
-  pull_request:
+  linter:
     runs-on: ubuntu-latest
 
     strategy:
@@ -25,21 +25,3 @@ jobs:
       - run: npm run lint:js
       - run: npm run lint:css
       - run: npm run build
-
-  push:
-    runs-on: ubuntu-latest
-    if: github.event.push
-    steps:
-      - uses: actions/checkout@v3
-      - name: Use Node.js v14
-        uses: actions/setup-node@v3
-        with:
-          node-version: 14
-      - run: npm ci
-      - run: npm run build
-      - name: Deploy with gh-pages
-        run: |
-          git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
-          npm run deploy -- -u "github-actions-bot <support+actions@github.com>"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
