@@ -47,13 +47,11 @@ const config = {
     alias: {
       "crypto-browserify": path.resolve(__dirname, "src/crypto-fall.js"),
     },
-
     fallback: {
       buffer: require.resolve("buffer"),
       stream: false,
       crypto: require.resolve("crypto"),
     },
-
     modules: [
       path.resolve(__dirname, "node_modules"),
       path.resolve(__dirname, "node_modules/ui/node_modules"),
