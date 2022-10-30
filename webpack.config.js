@@ -5,9 +5,9 @@ const webpack = require('webpack');
 
 const config = {
   entry: {
-    index: './src/index.js',
-    about: './src/pages/About.js',
-    home: './src/pages/Home.js',
+    main: {
+        import: './src/index.js',
+    }
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -31,13 +31,16 @@ const config = {
     filename: '[name].[contenthash].js',
   },
   devServer: {
-    contentBase: path.join(__dirname, 'dist'),
+    hot: true,
+    port: 9000,
+    open: true,
   },
+  devtool: false,
   module: {
     rules: [
       {
         test: /\.(js|jsx)$/,
-        exclude: [/node_modules/],
+        exclude: /(node_modules)/,
         loader: 'babel-loader',
         options: {
           presets: [
@@ -45,10 +48,11 @@ const config = {
             ['@babel/preset-react', { runtime: 'automatic' }],
           ],
         },
+        resolve: { extensions: [".js", ".jsx"] }
       },
       {
         test: /\.css$/i,
-        use: ['style-loader', 'css-loader'],
+        use: 'css-loader',
       },
       {
         test: /\.(html)$/,
@@ -61,19 +65,17 @@ const config = {
       stream: require.resolve('stream-browserify'),
     },
   },
-  mode: 'development',
   optimization: {
     minimize: true,
     moduleIds: 'deterministic',
     innerGraph: true,
     concatenateModules: true,
-    usedExports: true,
 
     runtimeChunk: 'single',
     splitChunks: {
       chunks: 'all',
-      maxSize: 300000,
-      minChunks: 1,
+      minSize: 10000,
+      maxSize: 250000,
     },
   },
   // @TODO lodash treeshaking
