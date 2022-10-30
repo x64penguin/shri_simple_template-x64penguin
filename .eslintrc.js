@@ -5,19 +5,19 @@ module.exports = {
   },
   extends: [
     'plugin:react/recommended',
-    'airbnb',
   ],
   overrides: [
   ],
   parserOptions: {
     ecmaVersion: 'latest',
     sourceType: 'module',
-    jsx: true,
   },
   plugins: [
     'react',
   ],
   rules: {
-
+    'react/prop-types': 'off',
+    'react/react-in-jsx-scope': 'off',
+    "react/display-name": "off",
   },
 };

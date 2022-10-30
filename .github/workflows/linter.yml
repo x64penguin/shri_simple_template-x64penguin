@@ -1,43 +1,44 @@
-name: NodeJS with Webpack
+name: NodeJS worflow
 
 on:
-  push:
-  
   pull_request:
-    branches: [ "master" ]
+
+  push:
+    branches: [master]
 
 jobs:
-  linter:
+  pull_request:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - name: Use Node.js v14
+        uses: actions/setup-node@v3
         with:
-          node-version: '14'
-          
-      - run: npm install
+          node-version: 14
+      - run: npm ci
+      - run: npm run build
+      - name: Deploy with gh-pages
+        run: |
+          git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
+          npm run deploy -- -u "github-actions-bot <support+actions@github.com>"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  push:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [14.x, 16.x]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm ci
+      - run: npm run build
       - run: npm run lint:js
       - run: npm run lint:css
       - run: npm run build
-      
-      - run: echo "линтеры воркают"
-  
-  push:
-    runs-on: ubuntu-latest
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    if: github.event.pull_request
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-      
-        with:
-          node-version: '14'
-          
-      - run: npm install
-      - run: npm run build
-
-      - run: git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
-      - run: npm run deploy -- -u "github-actions-bot <support+actions@github.com>"
-      
-      - run: echo "деплой воркает"

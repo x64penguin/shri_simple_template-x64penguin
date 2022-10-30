@@ -1,13 +1,12 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const StatoscopePlugin = require('@statoscope/webpack-plugin').default;
-const webpack = require('webpack');
 
 const config = {
   entry: {
     main: {
-        import: './src/index.js',
-    }
+      import: './src/index.js',
+    },
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -15,27 +14,14 @@ const config = {
     }),
     new StatoscopePlugin({
       saveStatsTo: 'stats.json',
-      saveReportTo: 'report.html',
       saveOnlyStats: false,
       open: false,
-    }),
-    new webpack.ProvidePlugin({
-      process: 'process/browser',
-    }),
-    new webpack.DefinePlugin({
-      'process.env': JSON.stringify(process.env),
     }),
   ],
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: '[name].[contenthash].js',
   },
-  devServer: {
-    hot: true,
-    port: 9000,
-    open: true,
-  },
-  devtool: false,
   module: {
     rules: [
       {
@@ -48,28 +34,36 @@ const config = {
             ['@babel/preset-react', { runtime: 'automatic' }],
           ],
         },
-        resolve: { extensions: [".js", ".jsx"] }
+        resolve: { extensions: ['.js', '.jsx'] },
       },
       {
         test: /\.css$/i,
-        use: 'css-loader',
-      },
-      {
-        test: /\.(html)$/,
-        loader: 'html-loader',
+        use: ['style-loader', 'css-loader'],
       },
     ],
   },
+
   resolve: {
-    fallback: {
-      stream: require.resolve('stream-browserify'),
+    alias: {
+      "crypto-browserify": path.resolve(__dirname, "src/crypto-fall.js"),
     },
+    fallback: {
+      buffer: require.resolve("buffer"),
+      stream: false,
+      crypto: require.resolve("crypto"),
+    },
+    modules: [
+      path.resolve(__dirname, "node_modules"),
+      path.resolve(__dirname, "node_modules/ui/node_modules"),
+    ],
   },
+
   optimization: {
     minimize: true,
     moduleIds: 'deterministic',
     innerGraph: true,
     concatenateModules: true,
+    nodeEnv: 'production',
 
     runtimeChunk: 'single',
     splitChunks: {
@@ -78,10 +72,12 @@ const config = {
       maxSize: 250000,
     },
   },
-  // @TODO lodash treeshaking
-  // @TODO chunk for lodash
-  // @TODO chunk for runtime
-  // @TODO fallback for crypto
+
+  performance: {
+    hints: false,
+    maxAssetSize: 512000,
+    maxEntrypointSize: 512000,
+  },
 };
 
 module.exports = config;
