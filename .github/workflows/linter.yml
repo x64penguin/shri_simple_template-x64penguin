@@ -1,13 +1,13 @@
 name: NodeJS worflow
 
 on:
-  pull_request:
+  pull_request_review:
 
   push:
     branches: [master]
 
 jobs:
-  pull_request:
+  push:
     runs-on: ubuntu-latest
 
     strategy:
@@ -26,9 +26,9 @@ jobs:
       - run: npm run lint:css
       - run: npm run build
 
-  push:
+
+  pull_request_review:
     runs-on: ubuntu-latest
-    if: github.event.push
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js v14
