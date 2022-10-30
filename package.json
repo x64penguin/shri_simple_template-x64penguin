@@ -20,8 +20,8 @@
     "scripts": {
         "start": "webpack serve",
         "build": "webpack",
-        "lint:js": "npx eslint \"src/*.js\" --fix",
-        "lint:css": "npx stylelint \"src/*.css\" --fix",
+        "lint:js": "eslint \"src/*.js\" --fix",
+        "lint:css": "npx stylelint \"**/*.css\" --ignore-pattern 'dist/*'",
         "analyze": "webpack --json stats.json",
         "validate": "statoscope validate -i stats.json --config=./statoscope.config.js",
         "deploy": "gh-pages -d dist"
